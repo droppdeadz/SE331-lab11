@@ -27,16 +27,20 @@ import java.util.Date;
 /**
  * Created by Dto on 07-Apr-17.
  */
-@ConfigurationProperties(prefix="server")
+@ConfigurationProperties(prefix = "server")
 @Component
-public class DataLoader implements ApplicationRunner{
+public class DataLoader implements ApplicationRunner {
     StudentDao studentDao;
+    Student student1, student2, student3;
+    User user1, user2, user3;
+
     @Autowired
     public void setStudentDao(StudentDao studentDao) {
         this.studentDao = studentDao;
     }
 
     CourseDao courseDao;
+
     @Autowired
     public void setCourseDao(CourseDao courseDao) {
         this.courseDao = courseDao;
@@ -45,6 +49,7 @@ public class DataLoader implements ApplicationRunner{
     String baseUrl;
     String imageUrl;
     String imageBaseUrl;
+
     public void setBaseUrl(String baseUrl) {
         this.baseUrl = baseUrl;
     }
@@ -54,10 +59,12 @@ public class DataLoader implements ApplicationRunner{
     }
 
     UserRepository userSecurityRepository;
+
     @Autowired
     public void setUserSecurityRepository(UserRepository userSecurityRepository) {
         this.userSecurityRepository = userSecurityRepository;
     }
+
     AuthorityRepository authorityRepository;
 
     @Autowired
@@ -69,14 +76,15 @@ public class DataLoader implements ApplicationRunner{
     @Transactional
     public void run(ApplicationArguments args) throws Exception {
         imageBaseUrl = baseUrl + imageUrl;
-        Student student1 = Student.builder().studentId("SE-001").name("Mitsuha").surname("Miyamizu")
-                .gpa(2.15).image(imageBaseUrl+"mitsuha.gif").feature(true)
+
+        student1 = Student.builder().studentId("SE-001").name("Mitsuha").surname("Miyamizu")
+                .gpa(2.15).image(imageBaseUrl + "mitsuha.gif").feature(true)
                 .penAmount(0).description("The most beloved one").build();
-        Student student2 = Student.builder().studentId("SE-002").name("Prayuth").surname("The minister")
-                .gpa(3.59).image(imageBaseUrl+"tu.jpg").feature(false)
+        student2 = Student.builder().studentId("SE-002").name("Prayuth").surname("The minister")
+                .gpa(3.59).image(imageBaseUrl + "tu.jpg").feature(false)
                 .penAmount(15).description("The great man ever!!!!").build();
-        Student student3 = Student.builder().studentId("SE-003").name("Jurgen").surname("Kloop")
-                .gpa(2.15).image(imageBaseUrl+"Kloop.gif").feature(true)
+        student3 = Student.builder().studentId("SE-003").name("Jurgen").surname("Kloop")
+                .gpa(2.15).image(imageBaseUrl + "Kloop.gif").feature(true)
                 .penAmount(2).description("The man for the Kop").build();
 
         Course course1 = Course.builder().courseId("953331").courseName("CBSD").build();
@@ -99,10 +107,17 @@ public class DataLoader implements ApplicationRunner{
 
         securitySetup();
 
-
+        student1.setUser(user1);
+        user1.setStudent(student1);
+        student2.setUser(user2);
+        user2.setStudent(student2);
+        student3.setUser(user3);
+        user3.setStudent(student3);
     }
+
     private void securitySetup() {
-        User user1 = User.builder()
+
+        user1 = User.builder()
                 .username("admin")
                 .password("admin")
                 .firstname("admin")
@@ -112,7 +127,7 @@ public class DataLoader implements ApplicationRunner{
                 .lastPasswordResetDate(Date.from(LocalDate.of(2016, 01, 01).atStartOfDay(ZoneId.systemDefault()).toInstant()))
                 .build();
 
-        User user2 = User.builder()
+        user2 = User.builder()
                 .username("user")
                 .password("user")
                 .firstname("user")
@@ -121,7 +136,7 @@ public class DataLoader implements ApplicationRunner{
                 .enabled(true)
                 .lastPasswordResetDate(Date.from(LocalDate.of(2016, 01, 01).atStartOfDay(ZoneId.systemDefault()).toInstant()))
                 .build();
-        User user3 = User.builder()
+        user3 = User.builder()
                 .username("disabled")
                 .password("disabled")
                 .firstname("user")
@@ -146,5 +161,8 @@ public class DataLoader implements ApplicationRunner{
         userSecurityRepository.save(user1);
         userSecurityRepository.save(user2);
         userSecurityRepository.save(user3);
+
+
     }
+
 }

@@ -1,5 +1,6 @@
 package camt.cbsd.entity;
 
+import camt.cbsd.entity.security.User;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 import org.hibernate.annotations.*;
@@ -34,6 +35,8 @@ public class Student {
     String description;
     @ManyToMany
     List<Course> enrolledCourse = new ArrayList<>();
+    @OneToOne(mappedBy = "student")
+    User user;
 
     public List<Course> addCourse(Course course) {
         enrolledCourse = Optional.ofNullable(enrolledCourse).orElse(new ArrayList<>());

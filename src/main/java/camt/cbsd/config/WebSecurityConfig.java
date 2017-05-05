@@ -35,7 +35,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public void configureAuthentication(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
         authenticationManagerBuilder
                 .userDetailsService(this.userDetailsService);
-              //  .passwordEncoder(passwordEncoder());
+        //  .passwordEncoder(passwordEncoder());
     }
 
     @Bean
@@ -50,6 +50,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
+        httpSecurity.headers().frameOptions().disable();
         httpSecurity
                 // we don't need CSRF because our token is invulnerable
                 .csrf().disable()
@@ -62,8 +63,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .antMatchers("/course").permitAll()
-                .antMatchers(HttpMethod.POST,"/course").hasRole("ADMIN")
-                .antMatchers("/auth/**","/h2-console/**","/refresh","/student/images/**").permitAll()
+                .antMatchers(HttpMethod.POST, "/course").hasRole("ADMIN")
+                .antMatchers("/auth/**", "/h2-console/**", "/refresh", "/student/images/**").permitAll()
 
                 .anyRequest().authenticated();
 

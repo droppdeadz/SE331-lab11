@@ -16,6 +16,12 @@ export class StudentsAddComponent {
 
   ngOnInit() {
     this.student = new Student();
+    this.studentDataService.getStudentsData()
+      .subscribe(student => this.student = student,(error :Error)=>{
+        if (error.message === 'UnAuthorize'){
+          this.router.navigate(['login'],{queryParams:{source:'student-add '}});
+        }
+      });
   }
 
   upQuantity(student: Student) {

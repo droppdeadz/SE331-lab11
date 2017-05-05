@@ -1,7 +1,9 @@
 package camt.cbsd.entity.security;
 
+import camt.cbsd.entity.Student;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
@@ -9,7 +11,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Date;
 import java.util.List;
-
+@Data
 @Entity
 @Table(name = "USER")
 @Builder
@@ -63,6 +65,9 @@ public class User {
             joinColumns = {@JoinColumn(name = "USER_ID", referencedColumnName = "ID")},
             inverseJoinColumns = {@JoinColumn(name = "AUTHORITY_ID", referencedColumnName = "ID")})
     private List<Authority> authorities;
+
+    @OneToOne
+    Student student;
 
     public Long getId() {
         return id;

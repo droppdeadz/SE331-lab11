@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Course} from '../../students/course';
 import {CourseServerService} from '../../service/course-server.service';
-import {ActivatedRoute, Params} from '@angular/router';
+import {ActivatedRoute, Params, Router} from '@angular/router';
+import {StudentsDataService} from "../../service/students-data.service";
 
 @Component({
   selector: 'app-list-course',
@@ -10,18 +11,29 @@ import {ActivatedRoute, Params} from '@angular/router';
 })
 export class ListCourseComponent implements OnInit {
 
-  courses:Course[];
-  constructor(private courseService:CourseServerService,private route:ActivatedRoute) { }
+  courses: Course[];
+  student: any = {};
 
-  result:string;
+  constructor(private courseService: CourseServerService, private route: ActivatedRoute, private router: Router,private studentDataService: StudentsDataService) {
+  }
+
+  result: string;
+
   ngOnInit() {
     this.route.queryParams
-      .subscribe((params : Params) => {
-      this.result = params['result'];
-    });
+      .subscribe((params: Params) => {
+        this.result = params['result'];
+      });
+
+    this.studentDataService.getStudentsData()
+      .subscribe(student => this.student = student,(error :Error)=>{
+        if (error.message === 'UnAuthorize'){
+          this.router.navigate(['login'],{queryParams:{source:'student-add '}});
+        }
+      });
 
     this.courseService.getCourse()
-      .subscribe(courses=>this.courses = courses);
+      .subscribe(courses => this.courses);
   }
 
 }
